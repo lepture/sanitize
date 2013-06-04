@@ -25,12 +25,14 @@ var defaults = {
   // null means unwrap
   'span': null,
   'font': null,
+  'div': null,
 
   // string means replace tag
-  'div': 'p',
   'i': 'em',
   'b': 'strong'
 }
+
+var blankTags = ['hr', 'br', 'img'];
 
 function sanitize(html, whitelist) {
   whitelist = whitelist || defaults;
@@ -38,6 +40,10 @@ function sanitize(html, whitelist) {
   output.find('*').each(function() {
     var tagName = this.nodeName.toLowerCase();
     if (whitelist.hasOwnProperty(tagName)) {
+      if ($.inArray(tagName, blankTags) === -1 && !this.innerText) {
+        $(this).remove();
+        return;
+      }
       var ret = whitelist[tagName];
       if (ret === null) {
         var node = $(this);

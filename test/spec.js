@@ -17,9 +17,9 @@ describe('sanitize', function() {
     assert(ret, 'foo bar')
   })
 
-  it('should replace div with p', function() {
-    var ret = sanitize('<div>foo</div> bar')
-    assert(ret, '<p>foo</p> bar')
+  it('should replace i with em', function() {
+    var ret = sanitize('<i>foo</i> bar')
+    assert(ret, '<em>foo</em> bar')
   })
 
   it('should keep href only', function() {
@@ -28,8 +28,13 @@ describe('sanitize', function() {
   })
 
   it('can replace complex html', function() {
-    var ret = sanitize('<div>foo <b>bold</b></div>')
-    assert(ret, '<p>foo <strong>bold</strong></p>')
+    var ret = sanitize('<i>foo <b>bold</b></i>')
+    assert(ret, '<em>foo <strong>bold</strong></em>')
   })
+
+  it('should remove blank tags', function() {
+    var ret = sanitize('<i>foo <b>bold</b><p></p></i>')
+    assert(ret, '<em>foo <strong>bold</strong></em>')
+  });
 
 })
