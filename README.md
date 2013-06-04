@@ -5,7 +5,13 @@ sanitize html for safety.
 
 ## Installation
 
+Component install with:
+
     $ component install lepture/sanitize
+
+SPM install with:
+
+    $ spm install lepture/sanitize
 
 ## API
 
