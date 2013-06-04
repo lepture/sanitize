@@ -1,0 +1,12 @@
+{
+  "family": "lepture",
+  "name": "sanitize",
+  "version": "0.1.0",
+  "description": "sanitize html for safety.",
+  "keywords": [
+    "html", "xss"
+  ],
+  "spm": {
+    "output": ["sanitize.js"]
+  }
+}

@@ -4,7 +4,7 @@
   "description": "sanitize html for safety.",
   "version": "0.1.0",
   "keywords": [
-    "html"
+    "html", "xss"
   ],
   "development": {
     "visionmedia/mocha": "1.9.0"
