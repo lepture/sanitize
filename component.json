@@ -1,0 +1,19 @@
+{
+  "name": "sanitize",
+  "repo": "lepture/sanitize",
+  "description": "sanitize html for safety.",
+  "version": "0.1.0",
+  "keywords": [
+    "html"
+  ],
+  "development": {
+    "visionmedia/mocha": "1.9.0"
+  },
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ],
+  "dependencies": {
+    "component/jquery": "*"
+  }
+}
