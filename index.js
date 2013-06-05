@@ -57,12 +57,13 @@ function sanitize(html, whitelist) {
 }
 
 function trimAttributes(node, allowAttrs) {
-  for (var i = 0; i < node.attributes.length; i++) {
+  var attrs = Array.prototype.slice.call(node.attributes);
+  for (var i = 0; i < attrs.length; i++) {
     (function(attr) {
       if (!~allowAttrs.indexOf(attr.name)) {
         node.removeAttributeNode(attr);
       }
-    })(node.attributes[i]);
+    })(attrs[i]);
   }
   return node;
 }

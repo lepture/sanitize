@@ -23,7 +23,7 @@ describe('sanitize', function() {
   })
 
   it('should keep href only', function() {
-    var ret = sanitize('<a href="#" name="baz">foo</a> bar')
+    var ret = sanitize('<a href="#" name="baz" class="baz" style="foo">foo</a> bar')
     assert(ret, '<a href="#">foo</a> bar')
   })
 
