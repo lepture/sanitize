@@ -7,6 +7,15 @@ describe('sanitize', function() {
     }
   }
 
+  function xhr(url, callback) {
+    var r = new XMLHttpRequest();
+    r.open('GET', url, true)
+    r.onreadystatechange = function() {
+      callback(r.responseText);
+    }
+    r.send(null);
+  }
+
   it('should has no script', function() {
     var ret = sanitize('<script>foo</script>bar')
     assert(ret, 'bar')
@@ -35,7 +44,7 @@ describe('sanitize', function() {
   it('should remove blank tags', function() {
     var ret = sanitize('<i>foo <b>bold</b><p></p></i>')
     assert(ret, '<em>foo <strong>bold</strong></em>')
-  });
+  })
 
   it('can handle nested error html', function() {
     var code = [
@@ -43,8 +52,17 @@ describe('sanitize', function() {
       '<a href="#">anchor</a>',
       '<pre><code><script> script</code></script></pre>',
       '<div><span><p></p><i>italic</i>'
-    ].join('');
-    console.log(sanitize(code));
+    ].join('')
+    // console.log(sanitize(code));
+  });
+
+  it('can sanitize complex html', function(done) {
+    var url = location.pathname + 'snippet.html'
+    xhr(url, function(text) {
+      var ret = sanitize(text)
+      assert(ret.indexOf('margin'), -1)
+      done()
+    });
   });
 
 })
