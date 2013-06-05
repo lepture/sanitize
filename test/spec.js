@@ -37,4 +37,14 @@ describe('sanitize', function() {
     assert(ret, '<em>foo <strong>bold</strong></em>')
   });
 
+  it('can handle nested error html', function() {
+    var code = [
+      '<div>foo <p class="foo">foo <p class="bar">bar</p></p>',
+      '<a href="#">anchor</a>',
+      '<pre><code><script> script</code></script></pre>',
+      '<div><span><p></p><i>italic</i>'
+    ].join('');
+    console.log(sanitize(code));
+  });
+
 })

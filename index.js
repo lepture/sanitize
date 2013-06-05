@@ -1,5 +1,3 @@
-var $ = require('jquery');
-
 var defaults = {
   // keep attributes
   'h1': [],
@@ -20,57 +18,72 @@ var defaults = {
   'ol': [],
   'li': [],
   'pre': [],
-  'code': [],
-
-  // null means unwrap
-  'span': null,
-  'font': null,
-  'div': null,
-
-  // string means replace tag
-  'i': 'em',
-  'b': 'strong'
+  'code': []
 }
 
-var blankTags = ['hr', 'br', 'img'];
 
 function sanitize(html, whitelist) {
   whitelist = whitelist || defaults;
-  var output = $('<div>' + html + '</div>');
-  output.find('*').each(function() {
-    var tagName = this.nodeName.toLowerCase();
-    if (whitelist.hasOwnProperty(tagName)) {
-      if ($.inArray(tagName, blankTags) === -1 && !this.innerText) {
-        $(this).remove();
+
+  html = cleanEmpty(html);
+  html = unwrap(html, 'span');
+  html = unwrap(html, 'font');
+  html = unwrap(html, 'div');
+  html = replaceTag(html, 'i', 'em');
+  html = replaceTag(html, 'b', 'strong');
+
+  var div = document.createElement('div');
+  div.innerHTML = html;
+
+  for (var i = 0; i < div.childNodes.length; i++) {
+    (function(node) {
+      if (node.nodeType === document.TEXT_NODE) {
         return;
       }
-      var ret = whitelist[tagName];
-      if (ret === null) {
-        var node = $(this);
-        node.replaceWith(sanitize(node.html(), whitelist));
-      } else if ($.isArray(ret)) {
-        trimAttributes(this, ret);
-      } else {
-        var node = $(this);
-        var el = document.createElement(ret);
-        el.innerHTML = sanitize(node.html(), whitelist);
-        node.replaceWith(el);
+      if (node.nodeType !== document.ELEMENT_NODE) {
+        return div.removeChild(node);
       }
-    } else {
-      $(this).remove();
-    }
-  });
-  return output.html();
+      var tagName = node.nodeName.toLowerCase();
+      if (whitelist.hasOwnProperty(tagName)) {
+        var allowAttrs = whitelist[tagName];
+        trimAttributes(node, allowAttrs);
+      } else {
+        div.removeChild(node);
+      }
+    })(div.childNodes[i]);
+  }
+
+  return cleanEmpty(div.innerHTML);
 }
 
 function trimAttributes(node, allowAttrs) {
-  $.each(node.attributes, function() {
-    var attrName = this.name;
-    if ($.inArray(attrName, allowAttrs) === -1) {
-      node.removeAttribute(attrName);
-    }
-  });
+  for (var i = 0; i < node.attributes.length; i++) {
+    (function(attr) {
+      if (!~allowAttrs.indexOf(attr.name)) {
+        node.removeAttributeNode(attr);
+      }
+    })(node.attributes[i]);
+  }
   return node;
+}
+
+function cleanEmpty(html) {
+  var regex = /<(\w+)[^>]*>\s*<\/\1>/g;
+  return html.replace(regex, '');
+}
+
+function replaceTag(html, orig, repl) {
+  var regex;
+  regex = new RegExp('<' + orig + '[^>]*>', 'g');
+  html = html.replace(regex, '<' + repl + '>');
+  regex = new RegExp('</' + orig + '>', 'g');
+  html = html.replace(regex, '</' + repl + '>');
+  return html;
+}
+
+function unwrap(html, tag) {
+  var regex = new RegExp('</?' + tag + '[^>]*>', 'g');
+  return html.replace(regex, '');
 }
 
 sanitize.defaults = defaults;
