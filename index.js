@@ -22,38 +22,36 @@ var defaults = {
 }
 
 
-function sanitize(html, whitelist) {
+function sanitize(container, whitelist) {
   whitelist = whitelist || defaults;
 
-  html = cleanEmpty(html);
-  html = unwrap(html, 'span');
-  html = unwrap(html, 'font');
-  html = unwrap(html, 'div');
-  html = replaceTag(html, 'i', 'em');
-  html = replaceTag(html, 'b', 'strong');
+  var rubbish = [];
 
-  var div = document.createElement('div');
-  div.innerHTML = html;
-
-  for (var i = 0; i < div.childNodes.length; i++) {
+  for (var i = 0; i < container.childNodes.length; i++) {
     (function(node) {
       if (node.nodeType === document.TEXT_NODE) {
         return;
       }
       if (node.nodeType !== document.ELEMENT_NODE) {
-        return div.removeChild(node);
+        rubbish.push(node);
+        return;
       }
       var tagName = node.nodeName.toLowerCase();
       if (whitelist.hasOwnProperty(tagName)) {
         var allowAttrs = whitelist[tagName];
         trimAttributes(node, allowAttrs);
+        sanitize(node, whitelist);
       } else {
-        div.removeChild(node);
+        rubbish.push(node);
       }
-    })(div.childNodes[i]);
+    })(container.childNodes[i]);
   }
 
-  return cleanEmpty(div.innerHTML);
+  for (var i = 0; i < rubbish.length; i++) {
+    container.removeChild(rubbish[i]);
+  }
+
+  return container;
 }
 
 function trimAttributes(node, allowAttrs) {
@@ -89,4 +87,15 @@ function unwrap(html, tag) {
 
 sanitize.defaults = defaults;
 
-module.exports = sanitize;
+exports = module.exports = function(html, whitelist) {
+  html = cleanEmpty(html);
+  html = unwrap(html, 'span');
+  html = unwrap(html, 'font');
+  html = unwrap(html, 'div');
+  html = replaceTag(html, 'i', 'em');
+  html = replaceTag(html, 'b', 'strong');
+  var div = document.createElement('div');
+  div.innerHTML = html;
+  sanitize(div, whitelist);
+  return cleanEmpty(div.innerHTML);
+};
