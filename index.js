@@ -1,69 +1,51 @@
-var defaults = {
-  // keep attributes
-  'h1': [],
-  'h2': [],
-  'h3': [],
-  'h4': [],
-  'h5': [],
-  'h6': [],
-  'p': [],
+var keep_tags = [
+  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'div', 'p', 'blockquote',
+  'ul', 'ol', 'li',
+  'pre', 'code',
+  'em', 'strong', 'i', 'b',
+  'a', 'img', 'hr',
+  'table', 'td', 'th', 'tr', 'tbody', 'thead', 'tfoot'
+];
+
+var drop_tags = [
+  'script', 'noscript', 'style',
+  'embed', 'iframe', 'frame',
+  'form', 'input', 'textarea', 'button', 'fieldset'
+];
+
+var replace_tags = {
+  'div': 'p',
+  'i': 'em',
+  'b': 'strong'
+};
+
+var keep_attributes = {
   'a': ['href'],
-  'img': ['src'],
-  'strong': [],
-  'em': [],
-  'hr': [],
-  'br': [],
-  'blockquote': [],
-  'ul': [],
-  'ol': [],
-  'li': [],
-  'pre': [],
-  'code': []
-}
+  'img': ['src', 'width', 'height']
+};
 
+var $ = require('jquery');
 
-function sanitize(container, whitelist) {
-  whitelist = whitelist || defaults;
+function sanitize(html) {
+  html = cleanEmpty(html);
+  var doc = $('<div>').html(html);
 
-  var rubbish = [];
-
-  for (var i = 0; i < container.childNodes.length; i++) {
-    (function(node) {
-      if (node.nodeType === document.TEXT_NODE) {
-        return;
-      }
-      if (node.nodeType !== document.ELEMENT_NODE) {
-        rubbish.push(node);
-        return;
-      }
-      var tagName = node.nodeName.toLowerCase();
-      if (whitelist.hasOwnProperty(tagName)) {
-        var allowAttrs = whitelist[tagName];
-        trimAttributes(node, allowAttrs);
-        sanitize(node, whitelist);
-      } else {
-        rubbish.push(node);
-      }
-    })(container.childNodes[i]);
-  }
-
-  for (var i = 0; i < rubbish.length; i++) {
-    container.removeChild(rubbish[i]);
-  }
-
-  return container;
-}
-
-function trimAttributes(node, allowAttrs) {
-  var attrs = Array.prototype.slice.call(node.attributes);
-  for (var i = 0; i < attrs.length; i++) {
-    (function(attr) {
-      if (!~allowAttrs.indexOf(attr.name)) {
-        node.removeAttributeNode(attr);
-      }
-    })(attrs[i]);
-  }
-  return node;
+  doc.find('*').each(function(i, item) {
+    var node = item[0];
+    if (!node) {
+      return;
+    }
+    var tag = node.tagName.toLowerCase();
+    if (isIn(tag, drop_tags)) {
+      item.remove();
+    } else if (!isIn(tag, keep_tags)) {
+      item.unwrap();
+    } else if (replace_tags[tag]) {
+      item.replaceWith($('<' + replace_tags[tag] + '>').html(item.html()));
+    }
+  });
+  return doc.html();
 }
 
 function cleanEmpty(html) {
@@ -71,31 +53,8 @@ function cleanEmpty(html) {
   return html.replace(regex, '');
 }
 
-function replaceTag(html, orig, repl) {
-  var regex;
-  regex = new RegExp('<' + orig + '[^>]*>', 'g');
-  html = html.replace(regex, '<' + repl + '>');
-  regex = new RegExp('</' + orig + '>', 'g');
-  html = html.replace(regex, '</' + repl + '>');
-  return html;
+function isIn(key, list) {
+  return ~list.indexOf(key.toLowerCase());
 }
 
-function unwrap(html, tag) {
-  var regex = new RegExp('</?' + tag + '[^>]*>', 'g');
-  return html.replace(regex, '');
-}
-
-sanitize.defaults = defaults;
-
-exports = module.exports = function(html, whitelist) {
-  html = cleanEmpty(html);
-  html = unwrap(html, 'span');
-  html = unwrap(html, 'font');
-  html = unwrap(html, 'div');
-  html = replaceTag(html, 'i', 'em');
-  html = replaceTag(html, 'b', 'strong');
-  var div = document.createElement('div');
-  div.innerHTML = html;
-  sanitize(div, whitelist);
-  return cleanEmpty(div.innerHTML);
-};
+module.exports = sanitize;

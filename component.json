@@ -14,5 +14,6 @@
     "index.js"
   ],
   "dependencies": {
+    "component/jquery": "*"
   }
 }

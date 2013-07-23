@@ -57,8 +57,7 @@ describe('sanitize', function() {
   });
 
   it('can sanitize complex html', function(done) {
-    var url = location.pathname + 'snippet.html'
-    xhr(url, function(text) {
+    xhr('./snippet.html', function(text) {
       var ret = sanitize(text)
       assert(ret.indexOf('margin'), -1)
       done()
