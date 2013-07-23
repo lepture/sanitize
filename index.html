@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="build/build.js"></script>
+  <title>Sanitize</title>
+  <style type="text/css">
+    .wrapper {
+      width: 90%;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    #editor, #result {
+      width: 100%;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <textarea id="editor"></textarea>
+
+    <h3>Result</h3>
+    <textarea id="result"></textarea>
+  </div>
+  <script>
+    var sanitize = require('sanitize');
+    var $ = require('component-jquery');
+    $('#editor').on('change keyup', function() {
+      $('#result').val(sanitize($('#editor').val()));
+    });
+  </script>
+</body>
+</html>
