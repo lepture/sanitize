@@ -8,12 +8,12 @@ describe('sanitize', function() {
   }
 
   function xhr(url, callback) {
-    var r = new XMLHttpRequest();
+    var r = new XMLHttpRequest()
     r.open('GET', url, true)
-    r.onreadystatechange = function() {
-      callback(r.responseText);
+    r.onload = function() {
+      callback(r.responseText)
     }
-    r.send(null);
+    r.send(null)
   }
 
   it('should has no script', function() {
@@ -53,15 +53,15 @@ describe('sanitize', function() {
       '<pre><code><script> script</code></script></pre>',
       '<div><span><p></p><i>italic</i>'
     ].join('')
-    // console.log(sanitize(code));
-  });
+    console.log(sanitize(code))
+  })
 
   it('can sanitize complex html', function(done) {
     xhr('./snippet.html', function(text) {
       var ret = sanitize(text)
       assert(ret.indexOf('margin'), -1)
       done()
-    });
-  });
+    })
+  })
 
 })
