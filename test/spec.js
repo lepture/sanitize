@@ -1,9 +1,17 @@
 describe('sanitize', function() {
+  var cases = ['a', 'b']
+
   var sanitize = require('sanitize')
 
   function assert(a, b) {
     if (a !== b) {
       throw new Error(a + ' not equal ' + b)
+    }
+  }
+
+  function notContain(a, b) {
+    if (a.indexOf(b) !== -1) {
+      throw new Error(b + ' is in\n' + a);
     }
   }
 
@@ -54,15 +62,19 @@ describe('sanitize', function() {
       '<div><span><p></p><i>italic</i>'
     ].join('')
     var ret = sanitize(code)
-    assert(ret.indexOf('class'), -1)
+    notContain(ret, 'class');
   })
 
-  it('can sanitize complex html', function(done) {
-    xhr('./snippet.html', function(text) {
-      var ret = sanitize(text)
-      assert(ret.indexOf('margin'), -1)
-      done()
+  cases.forEach(function(name) {
+
+    it('can sanitize ' + name + '.html', function(done) {
+      xhr('./cases/' + name + '.html', function(text) {
+        var ret = sanitize(text)
+        notContain(ret, 'color');
+        done()
+      })
     })
+
   })
 
 })
