@@ -1,4 +1,5 @@
 build/
 components/
+node_modules/
 src/
 dist/

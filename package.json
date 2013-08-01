@@ -1,0 +1,19 @@
+{
+  "family": "lepture",
+  "name": "sanitize",
+  "version": "0.1.0",
+  "description": "sanitize html for safety.",
+
+  "devDependencies": {
+    "component": "*",
+    "mocha-browser": "*"
+  },
+
+  "scripts": {
+    "test": "make test"
+  },
+
+  "spm": {
+    "output": ["sanitize.js"]
+  }
+}
