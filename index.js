@@ -1,29 +1,31 @@
-var tags_keep = [
-  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-  'div', 'p', 'blockquote',
-  'ul', 'ol', 'li',
-  'pre', 'code',
-  'em', 'strong', 'i', 'b',
-  'a', 'img', 'hr',
-  'table', 'td', 'th', 'tr', 'tbody', 'thead', 'tfoot'
-];
+var config = {
+  keep: [
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'div', 'p', 'blockquote',
+    'ul', 'ol', 'li',
+    'pre', 'code',
+    'em', 'strong', 'i', 'b',
+    'a', 'img', 'hr',
+    'table', 'td', 'th', 'tr', 'tbody', 'thead', 'tfoot'
+  ],
 
-var tags_drop = [
-  'meta', 'link',
-  'script', 'noscript', 'style',
-  'embed', 'iframe', 'frame',
-  'form', 'input', 'textarea', 'button', 'fieldset'
-];
+  drop: [
+    'meta', 'link',
+    'script', 'noscript', 'style',
+    'embed', 'iframe', 'frame',
+    'form', 'input', 'textarea', 'button', 'fieldset'
+  ],
 
-var tags_replace = {
-  'div': 'p',
-  'i': 'em',
-  'b': 'strong'
-};
+  replace: {
+    'div': 'p',
+    'i': 'em',
+    'b': 'strong'
+  },
 
-var attributes_safe = {
-  'a': ['href'],
-  'img': ['src', 'width', 'height']
+  attributes: {
+    'a': ['href'],
+    'img': ['src', 'width', 'height']
+  }
 };
 
 
@@ -125,19 +127,18 @@ function sanitize(node) {
   }
 
   var tag = node.nodeName.toLowerCase();
-  if (~tags_drop.indexOf(tag)) {
+  if (~config.drop.indexOf(tag)) {
     return dropNode(node);
   }
-  if (!~tags_keep.indexOf(tag)) {
+  if (!~config.keep.indexOf(tag)) {
     return unwrap(node);
   }
 
-  if (tags_replace[tag]) {
-    node = replaceTag(node, tags_replace[tag]);
+  if (config.replace[tag]) {
+    node = replaceTag(node, config.replace[tag]);
   }
 
-  var allowAttrs = attributes_safe[tag] || [];
-  trimAttributes(node, allowAttrs);
+  trimAttributes(node, config.attributes[tag] || []);
   return node;
 }
 
@@ -152,10 +153,21 @@ function cleanEmpty(html) {
 }
 
 
-module.exports = function(html) {
+/**
+ * Exports sanitize API
+ */
+
+exports = module.exports = function(html) {
   var node = document.createElement('div');
   node.innerHTML = cleanEmpty(html);
 
   node = traversal(node, sanitize);
   return cleanEmpty(node.innerHTML);
 }
+
+
+/**
+ * Exports config data
+ */
+
+exports.config = config;
