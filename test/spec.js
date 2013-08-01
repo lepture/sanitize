@@ -53,7 +53,8 @@ describe('sanitize', function() {
       '<pre><code><script> script</code></script></pre>',
       '<div><span><p></p><i>italic</i>'
     ].join('')
-    console.log(sanitize(code))
+    var ret = sanitize(code)
+    assert(ret.indexOf('class'), -1)
   })
 
   it('can sanitize complex html', function(done) {

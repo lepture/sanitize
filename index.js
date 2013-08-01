@@ -44,7 +44,9 @@ function replaceTag(node, tagName) {
  */
 
 function trimAttributes(node, allowAttrs) {
+  // clone all attrs
   var attrs = Array.prototype.slice.call(node.attributes);
+
   for (var i = 0; i < attrs.length; i++) {
     (function(attr) {
       if (!~allowAttrs.indexOf(attr.name)) {
@@ -68,8 +70,12 @@ function dropNode(node) {
 /**
  * Remove the tag of the node
  */
+
 function unwrap(node) {
   var parent = node.parentNode;
+  if (!parent) {
+    return;
+  }
   var html = parent.innerHTML;
   var regex = new RegExp('</?' + node.tagName + '[^>]*>', 'gi');
   parent.innerHTML = html.replace(regex, '');
@@ -79,12 +85,19 @@ function unwrap(node) {
 /**
  * Traversal the node tree
  */
+
 function traversal(node, fn, parent) {
   if (!node) {
     return;
   }
 
-  var children = node.childNodes
+  if (!parent && node.childNodes.length > 1) {
+    // <br><a>foo</a>
+    // don't know why, the for loop will skip `a`
+    fn(node.childNodes[1]);
+  }
+
+  var children = node.childNodes;
 
   for (var i = 0; i < children.length; i++) {
     traversal(children[i], fn, node);
@@ -98,7 +111,11 @@ function traversal(node, fn, parent) {
 }
 
 
-function cleanNode(node) {
+/**
+ * Sanitize a node, clean the disaster
+ */
+
+function sanitize(node) {
   if (node.nodeType === document.TEXT_NODE) {
     return node;
   }
@@ -124,6 +141,11 @@ function cleanNode(node) {
   return node;
 }
 
+
+/**
+ * Clean empty node
+ */
+
 function cleanEmpty(html) {
   var regex = /<(\w+)[^>]*>\s*<\/\1>/g;
   return html.replace(regex, '');
@@ -131,11 +153,9 @@ function cleanEmpty(html) {
 
 
 module.exports = function(html) {
-  html = cleanEmpty(html);
-
   var node = document.createElement('div');
-  node.innerHTML = html;
-  node = traversal(node, cleanNode);
+  node.innerHTML = cleanEmpty(html);
 
+  node = traversal(node, sanitize);
   return cleanEmpty(node.innerHTML);
 }

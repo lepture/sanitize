@@ -25,10 +25,12 @@
   </div>
   <script>
     var sanitize = require('sanitize');
-    var $ = require('component-jquery');
-    $('#editor').on('change keyup', function() {
-      $('#result').val(sanitize($('#editor').val()));
-    });
+    var editor = document.getElementById('editor');
+    var result = document.getElementById('result');
+
+    editor.onkeyup = function() {
+      result.value = sanitize(editor.value)
+    };
   </script>
 </body>
 </html>
