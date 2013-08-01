@@ -93,15 +93,10 @@ function traversal(node, fn, parent) {
     return;
   }
 
-  if (!parent && node.childNodes.length > 1) {
-    // <br><a>foo</a>
-    // don't know why, the for loop will skip `a`
-    fn(node.childNodes[1]);
-  }
-
   var children = node.childNodes;
 
   for (var i = 0; i < children.length; i++) {
+    fn(children[i]);
     traversal(children[i], fn, node);
   }
 
@@ -148,7 +143,7 @@ function sanitize(node) {
  */
 
 function cleanEmpty(html) {
-  var regex = /<(\w+)[^>]*>\s*<\/\1>/g;
+  var regex = /<(\w+)[^>]*><\/\1>/g;
   return html.replace(regex, '');
 }
 
