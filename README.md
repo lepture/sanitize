@@ -2,6 +2,8 @@
 
 sanitize html for safety.
 
+[![Build Status](https://travis-ci.org/lepture/sanitize.png?branch=master)](https://travis-ci.org/lepture/sanitize)
+
 
 ## Installation
 
