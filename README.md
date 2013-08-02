@@ -3,6 +3,7 @@
 sanitize html for safety.
 
 [![Build Status](https://travis-ci.org/lepture/sanitize.png?branch=master)](https://travis-ci.org/lepture/sanitize)
+[![Coverage Status](https://coveralls.io/repos/lepture/sanitize/badge.png)](https://coveralls.io/r/lepture/sanitize)
 
 
 ## Installation

@@ -13,6 +13,14 @@ build: index.js components
 test: build
 	@$(tester) test/index.html
 
+coverage:
+	@jscoverage index.js cov.js
+	@mv index.js bak.js
+	@mv cov.js index.js
+	@$(MAKE) build
+	@$(tester) test/index.html -R html-cov > coverage.html
+	@mv bak.js index.js
+
 spm:
 	@echo "define(function(require, exports, module) {" > src/sanitize.js
 	@cat index.js >> src/sanitize.js
