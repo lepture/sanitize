@@ -6,6 +6,8 @@ node_js:
 after_success:
   - npm install jscoverage coveralls
   - node_modules/.bin/jscoverage index.js cov.js
+  - mv index.js bak.js
   - mv cov.js index.js
   - make build
+  - mv bak.js index.js
   - node_modules/.bin/mocha-browser test/index.html -R lcov | node_modules/.bin/coveralls
