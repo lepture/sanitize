@@ -54,6 +54,16 @@ describe('sanitize', function() {
     assert(ret, '<em>foo <strong>bold</strong></em>')
   })
 
+  it('should remove comments', function() {
+    var ret = sanitize('<!-- comment -->foo')
+    assert(ret, 'foo')
+  })
+
+  it('should unwrap article', function() {
+    var ret = sanitize('<article><dt>bar</dt></article>')
+    assert(ret, 'bar')
+  });
+
   it('can handle nested error html', function() {
     var code = [
       '<div>foo <p class="foo">foo <p class="bar">bar</p></p>',
