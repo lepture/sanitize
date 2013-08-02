@@ -2,7 +2,7 @@
   "name": "sanitize",
   "repo": "lepture/sanitize",
   "description": "sanitize html for safety.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [
     "html", "xss"
   ],
