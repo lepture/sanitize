@@ -154,7 +154,7 @@ function cleanEmpty(html) {
 
 exports = module.exports = function(html) {
   var node = document.createElement('div');
-  node.innerHTML = cleanEmpty(html);
+  node.innerHTML = html;
 
   node = traversal(node, sanitize);
   return cleanEmpty(node.innerHTML);
