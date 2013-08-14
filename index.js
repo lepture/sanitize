@@ -23,6 +23,7 @@ var config = {
   },
 
   attributes: {
+    '*': [],
     'a': ['href'],
     'img': ['src', 'width', 'height']
   }
@@ -46,6 +47,8 @@ function replaceTag(node, tagName) {
  */
 
 function trimAttributes(node, allowAttrs) {
+  allowAttrs = allowAttrs.concat(config.attributes['*']);
+
   // clone all attrs
   var attrs = Array.prototype.slice.call(node.attributes);
 
