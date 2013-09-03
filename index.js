@@ -5,7 +5,7 @@ var config = {
     'ul', 'ol', 'li',
     'pre', 'code',
     'em', 'strong', 'i', 'b',
-    'a', 'img', 'hr',
+    'a', 'img', 'hr', 'br',
     'table', 'td', 'th', 'tr', 'tbody', 'thead', 'tfoot'
   ],
 
