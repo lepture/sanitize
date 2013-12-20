@@ -7,7 +7,7 @@
     "html", "xss"
   ],
   "development": {
-    "visionmedia/mocha": "1.9.0"
+    "visionmedia/mocha": "*"
   },
   "license": "MIT",
   "scripts": [

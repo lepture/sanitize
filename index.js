@@ -1,7 +1,7 @@
 var config = {
   keep: [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'div', 'p', 'blockquote',
+    'div', 'p', 'blockquote', 'figure', 'figcaption',
     'ul', 'ol', 'li',
     'pre', 'code',
     'em', 'strong', 'i', 'b',
@@ -81,9 +81,11 @@ function unwrap(node) {
   if (!parent) {
     return;
   }
-  var html = parent.innerHTML;
-  var regex = new RegExp('</?' + node.tagName + '[^>]*>', 'gi');
-  parent.innerHTML = html.replace(regex, '');
+  var children = node.childNodes;
+  for (var i = 0; i < children.length; i++) {
+    parent.insertBefore(children[i], node);
+  }
+  parent.removeChild(node);
 }
 
 
@@ -161,7 +163,7 @@ exports = module.exports = function(html) {
 
   node = traversal(node, sanitize);
   return cleanEmpty(node.innerHTML);
-}
+};
 
 
 /**
