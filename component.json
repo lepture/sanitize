@@ -2,9 +2,10 @@
   "name": "sanitize",
   "repo": "lepture/sanitize",
   "description": "sanitize html for safety.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "keywords": [
-    "html", "xss"
+    "html",
+    "xss"
   ],
   "development": {
     "visionmedia/mocha": "*"
@@ -13,6 +14,5 @@
   "scripts": [
     "index.js"
   ],
-  "dependencies": {
-  }
+  "dependencies": {}
 }
