@@ -27,4 +27,13 @@ spm:
 	@echo "})" >> src/sanitize.js
 	@spm build
 
-.PHONY: components build test clean spm
+gh-pages: components
+	@component build
+	@rm -fr gh-pages
+	@mkdir gh-pages
+	@mv build gh-pages/
+	@cp index.html gh-pages/index.html
+	@ghp-import gh-pages -n
+	@rm -fr gh-pages
+
+.PHONY: components build test clean spm gh-pages
