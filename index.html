@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="build/build.js"></script>
+  <title>Sanitize</title>
+  <style type="text/css">
+    .wrapper {
+      width: 90%;
+      max-width: 680px;
+      margin: 60px auto;
+    }
+    #editor, #result {
+      font: 400 18px/1.62 "Georgia", "Xin Gothic", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
+      color: #333332;
+      width: 100%;
+      height: 200px;
+    }
+    .footer {
+      font: 400 14px/1.62 sans-serif;
+      color: #999;
+      text-align: center;
+    }
+    .footer a {
+      color: #999;
+    }
+  </style>
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-21475122-5']);
+    _gaq.push(['_setCustomVar', 1, 'Repo', 'lepture/sanitize']);
+    _gaq.push(['_trackPageview']);
+    _gaq.push(['_trackPageLoadTime']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      if (location.port) {
+        return;
+      }
+      ga.src = 'https://ssl.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <textarea id="editor">sanitize html &lt;b&gt;bold&lt;/b&gt;&lt;script&gt;var foo&lt;/script&gt;</textarea>
+
+    <h3>Result</h3>
+    <textarea id="result"></textarea>
+  </div>
+  <div class="footer">
+    A component by <a href="http://lepture.com/">Hsiaoming Yang</a>
+  </div>
+  <a href="https://github.com/lepture/sanitize">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+  </a>
+  <script>
+    var sanitize = require('sanitize');
+    var editor = document.getElementById('editor');
+    var result = document.getElementById('result');
+    result.value = sanitize(editor.value)
+    editor.onkeyup = function() {
+      result.value = sanitize(editor.value)
+    };
+  </script>
+</body>
+</html>
