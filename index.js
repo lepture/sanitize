@@ -1,3 +1,11 @@
+/**
+ * Sanitize
+ *
+ * sanitize html for safety, clean harmful and noisy nodes.
+ *
+ * Copyright (c) 2013 - 2014 by Hsiaoming Yang.
+ */
+
 var config = {
   keep: [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
