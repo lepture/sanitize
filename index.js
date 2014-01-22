@@ -125,7 +125,7 @@ function traversal(node, fn, parent) {
  * Sanitize a node, clean the disaster
  */
 
-function sanitize(node) {
+function clean(node) {
   if (node.nodeType === document.TEXT_NODE) {
     return node;
   }
@@ -155,7 +155,7 @@ function sanitize(node) {
  * Clean empty node
  */
 
-function cleanEmpty(html) {
+function empty(html) {
   var regex = /<(\w+)[^>]*><\/\1>/g;
   return html.replace(regex, '');
 }
@@ -165,7 +165,7 @@ function cleanEmpty(html) {
  * Exports sanitize API
  */
 
-exports = module.exports = function(html) {
+function sanitize(html) {
   var node;
 
   if (html.innerHTML) {
@@ -175,13 +175,15 @@ exports = module.exports = function(html) {
     node.innerHTML = html;
   }
 
-  node = traversal(node, sanitize);
-  return cleanEmpty(node.innerHTML);
-};
+  node = traversal(node, clean);
+  return empty(node.innerHTML);
+}
 
 
 /**
  * Exports config data
  */
 
-exports.config = config;
+sanitize.config = config;
+
+module.exports = sanitize;
